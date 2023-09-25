@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="synchronousFlow" doc:id="c81f1e95-1299-4a94-bc5a-8fc10aa847b7" >
+		<http:listener doc:name="Listener" doc:id="48c0a924-94d4-4872-8f27-ab70401aa98d" config-ref="HTTP_Listener_config" path="${http.listener.path}" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="INFO : Flow Initiated" doc:id="7c824a4e-0b4b-495e-ba73-0cb556d95b10" message="#[&quot;INFO : &quot; ++ p('app.name') ++ &quot; : Flow has been initiated&quot;]"/>
+		<logger level="INFO" doc:name="INFO : Calling Source API" doc:id="d976e6fe-82d4-42f4-be6f-dedfea2ec089" message='#["INFO : Calling Source API"]'/>
+		<http:request method="GET" doc:name="SourceAPICall" doc:id="4d72937d-f6aa-4cec-a190-3d6db5dbfa7f" config-ref="sourceAPI" path="${source.basepath}"/>
+		<logger level="INFO" doc:name="INFO : Source API Call Successful" doc:id="48500920-d9b6-4c4e-95b7-15bc29226c8c" message='#["INFO : Source API Call Successful"]'/>
+		<logger level="INFO" doc:name="INFO : Mapping in Progress" doc:id="fdc932c8-5bb8-48d3-af04-633c59fe6dc8" message='#["INFO : Mapping in Progress"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="2ef84c86-3f0e-462b-a86c-d3b9eefa0f7f" >
+      <ee:message >
+				<ee:set-payload resource="dwl/Mapping.dwl" />
+      </ee:message>
+    </ee:transform>
+		<logger level="INFO" doc:name="INFO : Mapping Completed" doc:id="05b766c9-2002-4e42-88ef-973a86bf3701" message='#["INFO : Mapping Completed"]'/>
+		<logger level="INFO" doc:name="INFO : Flow Completed" doc:id="237ac2db-92a5-4c54-beb9-0dfeed009665" message="#[&quot;INFO : &quot; ++ p('app.name') ++ &quot; : Flow has been completed&quot;]"/>
+	</flow>
+</mule>
